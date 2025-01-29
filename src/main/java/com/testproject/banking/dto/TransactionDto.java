@@ -1,10 +1,16 @@
 package com.testproject.banking.dto;
 
-public class TransactionDTO {
-    private double amount;
-    private String senderName;
-    private String senderSurname;
-    private String senderAccountNumber;
-    private String receiverName;
-    private String receiverSurname;
-    private String receiverAccountNumber;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigDecimal;
+
+@Getter
+@Setter
+@AllArgsConstructor
+public class TransactionDto {
+    private BigDecimal amount;
+    private String fromAccountNumber;
+    private String toAccountNumber;
+}

@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  api_service:
+    build: .
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - springapimysql-net
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/banking
+      SPRING_DATASOURCE_USERNAME: Nazar
+      SPRING_DATASOURCE_PASSWORD: strong_password
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    volumes:
+      - .m2:/root/.m2
+
+  mysqldb:
+    image: "mysql:8.0"
+    restart: always
+    ports:
+      - "3307:3307"
+    networks:
+      - springapimysql-net
+    environment:
+      MYSQL_DATABASE: banking
+      MYSQL_USER: Nazar
+      MYSQL_PASSWORD: strong_password
+      MYSQL_ROOT_PASSWORD: even_stronger_password
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
+
+networks:
+  springapimysql-net:

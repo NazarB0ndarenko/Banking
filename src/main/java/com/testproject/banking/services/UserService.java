@@ -1,9 +1,8 @@
-package com.testproject.banking.servises;
+package com.testproject.banking.services;
 
-import com.testproject.banking.entities.Card;
+import com.testproject.banking.dto.LoginUserDto;
 import com.testproject.banking.entities.User;
 import com.testproject.banking.dto.CreateUserDto;
-import com.testproject.banking.dto.LoginDto;
 import com.testproject.banking.model.SecurityUser;
 import com.testproject.banking.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -12,45 +11,45 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
+import org.springframework.stereotype.Service;
 
 @Slf4j
+@Service
 @AllArgsConstructor
 public class UserService implements UserDetailsService {
 
     private UserRepository userRepository;
     private PasswordEncoder passwordEncoder;
-    private CardService cardService;
+
+    public boolean userExists(String username, String email) {
+        boolean userExists = userRepository.findUserByUsername(username);
+        boolean emailExists = userRepository.findUserByEmail(email);
+
+        return userExists || emailExists;
+    }
 
     @Override
-    public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        log.info("Loading user by id: {}", id);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("Loading user by username: {}", username);
 
-        LoginDto loginDto = userRepository.findUserById(Long.parseLong(id))
+        LoginUserDto mainInfoUserDto = userRepository.loadUserByUsername(username)
                 .orElseThrow(() -> {
                     log.error("User not found");
                     return new UsernameNotFoundException("User not found");
                 });
 
-        return new SecurityUser(loginDto);
+        return new SecurityUser(mainInfoUserDto);
     }
 
-    public void createUser(CreateUserDto createUserDto) {
+    public long createUser(CreateUserDto createUserDto) {
         log.info("Encoding password for user with username: {}", createUserDto.getUsername());
         createUserDto.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
 
         log.info("Creating user with username: {}", createUserDto.getUsername());
         User user = new User(createUserDto);
 
-        log.info("Creating card for user with username: {}", createUserDto.getUsername());
-        Card card = cardService.createCard(createUserDto.getName() + createUserDto.getSurname());
-        
-
         log.info("Saving user with username: {}", createUserDto.getUsername());
-        userRepository.save(user);
-
-
-
+        user = userRepository.save(user);
+        return user.getId();
     }
 }

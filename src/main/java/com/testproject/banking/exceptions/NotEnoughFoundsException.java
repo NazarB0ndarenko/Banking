@@ -1,4 +1,7 @@
 package com.testproject.banking.exceptions;
 
-public class NotEnaughFoundsExaption {
+public class NotEnoughFoundsException extends RuntimeException {
+    public NotEnoughFoundsException(String message) {
+        super(message);
+    }
 }

@@ -9,7 +9,7 @@ services:
     networks:
       - springapimysql-net
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3306/banking
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysqldb:3307/banking
       SPRING_DATASOURCE_USERNAME: Nazar
       SPRING_DATASOURCE_PASSWORD: strong_password
     depends_on:
@@ -37,3 +37,4 @@ services:
 
 networks:
   springapimysql-net:
+

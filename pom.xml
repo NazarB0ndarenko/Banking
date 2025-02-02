@@ -11,8 +11,8 @@
 	<groupId>com.test-project</groupId>
 	<artifactId>Banking</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Banking2.0</name>
-	<description>Banking2.0</description>
+	<name>Banking</name>
+	<description>Banking</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -36,6 +36,13 @@
 				<groupId>org.springframework.cloud</groupId>
 				<artifactId>spring-cloud-dependencies</artifactId>
 				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.testcontainers</groupId>
+				<artifactId>testcontainers-bom</artifactId>
+				<version>1.20.4</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -108,11 +115,16 @@
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 			<version>2.8.3</version>
 		</dependency>
-<!--		<dependency>-->
-<!--			<groupId>org.postgresql</groupId>-->
-<!--			<artifactId>postgresql</artifactId>-->
-<!--			<scope>runtime</scope>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>mysql</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>

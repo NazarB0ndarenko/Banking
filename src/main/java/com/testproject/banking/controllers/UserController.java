@@ -4,11 +4,13 @@ import com.testproject.banking.dto.ChangeCardBalanceDto;
 import com.testproject.banking.dto.FullTransactionDto;
 import com.testproject.banking.dto.TransactionDto;
 import com.testproject.banking.exceptions.CardNotFoundException;
+import com.testproject.banking.exceptions.NotEnoughFoundsException;
 import com.testproject.banking.services.BankClientService;
 import com.testproject.banking.services.CardService;
 import com.testproject.banking.services.TransactionService;
 import com.testproject.banking.services.UserService;
 import com.testproject.banking.utility.BankClient;
+import io.swagger.v3.oas.models.examples.Example;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -40,6 +42,7 @@ public class UserController {
         }
 
         boolean cardExists = cardService.cardExists(transactionDto.getToAccountNumber());
+        log.info("card: {} exist is out system - {}", transactionDto.getToAccountNumber(), cardExists);
 
         if (cardExists) {
 
@@ -56,8 +59,13 @@ public class UserController {
             return ResponseEntity.ok("Transaction completed successfully");
         } else {
 
+            log.info("searching for bank with id: {}", transactionDto.getToAccountNumber().substring(0, 6));
+
             BankClient receiver = bankClientService.getClientByCardNumber(transactionDto.getToAccountNumber());
             if (receiver != null) {
+
+                log.info("searching for feign client for bank {}", transactionDto.getToAccountNumber().substring(0, 6));
+
                 receiver.createPayment(transactionDto);
                 cardService.withdrawBalance(transactionDto.getFromAccountNumber(), transactionDto.getAmount());
 
@@ -65,7 +73,6 @@ public class UserController {
                 transactionService.saveTransaction(transactionDto);
                 return ResponseEntity.ok("Transaction completed successfully");
             }
-
         }
 
         return ResponseEntity.badRequest().body("Receiver card not found");

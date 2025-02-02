@@ -1,7 +1,7 @@
 package com.testproject.banking.services;
 
 import com.testproject.banking.proxy.PaymentProxySOLDEN;
-import com.testproject.banking.proxy.PaymentProxyTest;
+import com.testproject.banking.proxy.PaymentProxyYUSNIN;
 import com.testproject.banking.utility.BankClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +16,10 @@ public class BankClientService {
 
     @Autowired
     public BankClientService(PaymentProxySOLDEN SOLDENBank,
-                             PaymentProxyTest testBank) {
+                             PaymentProxyYUSNIN YUSNINBank) {
         bankClientMap = new HashMap<>();
         bankClientMap.put("SOLDEN", SOLDENBank);
-        bankClientMap.put("TEST11", testBank);
+        bankClientMap.put("YUSNIN", YUSNINBank);
     }
 
     public BankClient getClientByCardNumber(String cardNumber) {
